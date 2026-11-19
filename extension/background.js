@@ -296,9 +296,14 @@ function keepAlive() {
 function sendToAgent(msg) {
   // API responses (with msg.id) go via HTTP — immune to WS disconnect
   if (msg.id) {
+    if (!callbackSecret) {
+      // No secret yet (fresh install or agent restarted mid-request) — deliver via WS
+      if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify(msg));
+      return;
+    }
     fetch('http://127.0.0.1:8100/api/ext/callback', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Callback-Secret': callbackSecret },
       body: JSON.stringify(msg),
     }).catch(() => {
       // HTTP failed — fallback to WS

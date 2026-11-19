@@ -2,6 +2,7 @@
 import asyncio
 import os
 import signal
+import subprocess
 import time
 import uuid
 from pathlib import Path
@@ -99,6 +100,8 @@ async def shutdown():
 
 async def process(args: list[str], *, timeout=1800, on_line=None, cwd=None, stdin=None):
     """Drain output continuously; cancellation/timeout also stops subprocess children."""
+    if os.name == 'nt':
+        return await _windows_process(args, timeout=timeout, on_line=on_line, cwd=cwd, stdin=stdin)
     from agent.services.export_cancel import current_token, check_cancelled
     token = current_token.get()
     check_cancelled()
@@ -125,6 +128,7 @@ async def process(args: list[str], *, timeout=1800, on_line=None, cwd=None, stdi
                 on_line(text)
         await proc.wait()
 
+
     try:
         try:
             await asyncio.wait_for(consume(), timeout)
@@ -137,9 +141,64 @@ async def process(args: list[str], *, timeout=1800, on_line=None, cwd=None, stdi
     finally:
         if proc.returncode is None:
             try:
-                os.killpg(proc.pid, signal.SIGKILL)
+                from agent.services.export_cancel import CancellationToken
+                CancellationToken._kill(proc.pid)
             except ProcessLookupError:
                 pass
         if token:
             token.unregister(proc.pid)
         await proc.wait()
+
+
+async def _windows_process(args, *, timeout, on_line, cwd, stdin):
+    """Use anonymous pipes on Windows, including restricted desktop sessions."""
+    from agent.services.export_cancel import current_token, check_cancelled, CancellationToken
+    token = current_token.get()
+    check_cancelled()
+    proc = subprocess.Popen(args, cwd=cwd,
+                            stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            creationflags=subprocess.CREATE_NO_WINDOW)
+    if token:
+        token.register(proc.pid)
+    loop = asyncio.get_running_loop()
+
+    def consume():
+        tail = ''
+        for line in iter(proc.stdout.readline, b''):
+            text = line.decode(errors='replace')
+            tail = (tail + text)[-1024 * 1024:]
+            if on_line:
+                loop.call_soon_threadsafe(on_line, text)
+        proc.wait()
+        return tail
+
+    def write_input():
+        try:
+            proc.stdin.write(stdin.encode())
+            proc.stdin.flush()
+        except BrokenPipeError:
+            pass
+        finally:
+            proc.stdin.close()
+
+    reader = asyncio.create_task(asyncio.to_thread(consume))
+    writer = asyncio.create_task(asyncio.to_thread(write_input)) if stdin is not None else None
+    try:
+        try:
+            tail = await asyncio.wait_for(asyncio.shield(reader), timeout)
+        except asyncio.TimeoutError as exc:
+            raise TimeoutError(f'{Path(args[0]).name} quá thời gian chờ ({timeout}s). Có thể chạy lại tác vụ.') from exc
+        check_cancelled()
+        if proc.returncode:
+            raise RuntimeError(f'{Path(args[0]).name} không xử lý được file: {tail[-1200:]}')
+        return tail
+    finally:
+        if proc.poll() is None:
+            CancellationToken._kill(proc.pid)
+            if proc.poll() is None:
+                proc.kill()
+        await asyncio.gather(reader, *([writer] if writer else []), return_exceptions=True)
+        proc.stdout.close()
+        if token:
+            token.unregister(proc.pid)

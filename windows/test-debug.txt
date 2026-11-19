@@ -1,0 +1,82 @@
+C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pytest_asyncio\plugin.py:300: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the "fixture" caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to "function" scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts =============================
+platform win32 -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\Code\FrameWeaver-Windows
+configfile: pytest.ini
+plugins: anyio-4.15.1, asyncio-1.4.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 10 items
+
+tests/unit/test_timeline.py::test_ffmpeg_progress_ignores_startup_na_value PASSED [ 10%]
+tests/unit/test_timeline.py::test_reorder_render_keeps_picture_sound_source_and_revision PASSED [ 20%]
+tests/unit/test_timeline.py::test_gap_mute_overlay_volume_and_preview PASSED [ 30%]
+tests/unit/test_timeline.py::test_real_waveform_sprite_cache_and_replaced_asset PASSED [ 40%]
+tests/unit/test_timeline.py::test_waveform_analysis_accepts_more_than_eight_assets_in_one_sequential_job PASSED [ 50%]
+tests/unit/test_timeline.py::test_browser_bulk_pause_cuts_save_and_render_with_matching_audio_and_captions PASSED [ 60%]
+Timeout (0:00:15)!
+Thread 0x000051e8 (most recent call first):
+  File "D:\Code\FrameWeaver-Windows\agent\services\media_jobs.py", line 168 in consume
+  File "C:\Program Files\Python312\Lib\concurrent\futures\thread.py", line 58 in run
+  File "C:\Program Files\Python312\Lib\concurrent\futures\thread.py", line 92 in _worker
+  File "C:\Program Files\Python312\Lib\threading.py", line 1010 in run
+  File "C:\Program Files\Python312\Lib\threading.py", line 1073 in _bootstrap_inner
+  File "C:\Program Files\Python312\Lib\threading.py", line 1030 in _bootstrap
+
+Thread 0x00001020 (most recent call first):
+  File "C:\Program Files\Python312\Lib\concurrent\futures\thread.py", line 89 in _worker
+  File "C:\Program Files\Python312\Lib\threading.py", line 1010 in run
+  File "C:\Program Files\Python312\Lib\threading.py", line 1073 in _bootstrap_inner
+  File "C:\Program Files\Python312\Lib\threading.py", line 1030 in _bootstrap
+
+Thread 0x00005e48 (most recent call first):
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\aiosqlite\core.py", line 59 in _connection_worker_thread
+  File "C:\Program Files\Python312\Lib\threading.py", line 1010 in run
+  File "C:\Program Files\Python312\Lib\threading.py", line 1073 in _bootstrap_inner
+  File "C:\Program Files\Python312\Lib\threading.py", line 1030 in _bootstrap
+
+Thread 0x0000248c (most recent call first):
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 774 in _poll
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 445 in select
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1949 in _run_once
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 641 in run_forever
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 322 in run_forever
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 674 in run_until_complete
+  File "C:\Program Files\Python312\Lib\asyncio\runners.py", line 118 in run
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pytest_asyncio\plugin.py", line 906 in inner
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\python.py", line 187 in pytest_pyfunc_call
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\python.py", line 1798 in runtest
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pytest_asyncio\plugin.py", line 570 in runtest
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\runner.py", line 184 in pytest_runtest_call
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\runner.py", line 250 in <lambda>
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\runner.py", line 361 in from_call
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\runner.py", line 249 in call_and_report
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\runner.py", line 139 in runtestprotocol
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\runner.py", line 118 in pytest_runtest_protocol
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\main.py", line 411 in pytest_runtestloop
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\main.py", line 387 in _main
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\main.py", line 333 in wrap_session
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\main.py", line 380 in pytest_cmdline_main
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_execution.py", line 147 in _multicall
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_manager.py", line 183 in _hookexec
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pluggy\_caller.py", line 197 in __call__
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\config\__init__.py", line 262 in _main
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\_pytest\config\__init__.py", line 286 in _console_main
+  File "C:\Users\THMT\Documents\Codex\2026-10-29\tii\work\build-venv\Lib\site-packages\pytest\__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main

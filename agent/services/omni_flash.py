@@ -25,7 +25,7 @@ from pathlib import Path
 from agent.services import flow_batch as fb
 from agent.services.flow_client import get_flow_client
 
-_MODELS_FILE = Path(__file__).parent.parent / "models.json"
+from agent.config import _MODELS_FILE
 
 OMNI_FLASH_VALID_DURATIONS = (4, 6, 8, 10)
 OMNI_FLASH_VALID_ASPECTS = {

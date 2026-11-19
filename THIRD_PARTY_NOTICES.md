@@ -1,5 +1,16 @@
 # Third-party notices for FrameWeaver
 
+## Windows Muse Preview addition
+
+The Windows build includes muse2api, copyright its upstream contributors,
+under MIT: https://github.com/crisng95/muse2api . Base revision:
+efc06dd9741efe3b56a4bb02bb4761c0003eae30. The local Windows build removes
+the wildcard remote-debugging origin flag, explicitly binds Chrome debugging
+to loopback, and disables environment proxies for local CDP WebSockets.
+The preserved license is included with dependency notices. The customized
+source and wheel are under windows/muse-source and windows/wheels.
+No code from the supplied DgtAutoGenerateVideoAI binary is included.
+
 FrameWeaver is maintained as its own project with additional editing, media, and
 speech workflows. It includes code adapted from
 [Flow Kit](https://github.com/crisng95/flowkit) under the MIT license.
@@ -29,3 +40,15 @@ package; review their code, model, and voice terms separately before use.
 
 FrameWeaver is a community tool and is not affiliated with
 Google, Anthropic, OpenAI, or the authors of its optional integrations.
+
+Windows 1.0.4 compatibility: the optional hatch_gw cookie is no longer required
+by the browser driver. The application refreshes and verifies the real Muse
+session before importing its cookies. Required session cookies remain enforced.
+
+Windows community patch 1.0.20: muse2api core/json_storage.py, accounts/store.py and services/tasks.py use fsync, validated JSON backups and recovery with preserved corrupt snapshots. Patched source is supplied in windows/muse-source/muse2api-Windows-source.zip.
+
+Windows community patch 1.0.24: muse2api account quota cooldown survives concurrent successes and restarts; explicit current-reply quota detection and quota-only account failover. Source archive supplied in windows/muse-source/muse2api-Windows-source.zip.
+
+Windows community patch 1.0.25: muse2api video submissions support scoped idempotency keys; task retention enlarged with active tasks preserved. Source supplied in windows/muse-source/muse2api-Windows-source.zip.
+
+Windows community patch 1.2.2: muse2api errors.py recognizes current-reply daily/weekly quota variants; browser driver stops immediately on explicit quota even with a stale generating spinner. Patched source supplied in windows/muse-source/muse2api-Windows-source.zip.

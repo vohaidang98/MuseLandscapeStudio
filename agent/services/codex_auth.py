@@ -63,7 +63,7 @@ class CodexSession:
                 stderr=asyncio.subprocess.DEVNULL, limit=512 * 1024,
             )
             await self.request("initialize", {"clientInfo": {
-                "name": "frameweaver", "title": "FrameWeaver", "version": "1.3.1",
+                "name": "frameweaver", "title": "FrameWeaver", "version": "1.3.2",
             }})
             await self.send({"method": "initialized"})
             return self
@@ -78,12 +78,13 @@ class CodexSession:
         if self.proc:
             if self.proc.returncode is None:
                 with suppress(ProcessLookupError):
-                    os.killpg(self.proc.pid, signal.SIGTERM)
+                    self.proc.terminate() if os.name == "nt" else os.killpg(self.proc.pid, signal.SIGTERM)
                 try:
                     await asyncio.wait_for(self.proc.wait(), 3)
                 except TimeoutError:
                     with suppress(ProcessLookupError):
-                        os.killpg(self.proc.pid, signal.SIGKILL)
+                        from agent.services.export_cancel import CancellationToken
+                        CancellationToken._kill(self.proc.pid)
                     await self.proc.wait()
             if self.proc.stdin:
                 self.proc.stdin.close()

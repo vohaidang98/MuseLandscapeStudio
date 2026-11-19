@@ -17,6 +17,7 @@ const GalleryPage = lazy(() => import('./pages/GalleryPage'))
 const GuidePage = lazy(() => import('./pages/GuidePage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const ModelCatalogPage = lazy(() => import('./pages/ModelCatalogPage'))
+const MusePage = lazy(() => import('./pages/MusePage'))
 
 const NAV: { to: string; icon: typeof LayoutDashboard; labelKey: TranslationKey; exact: boolean }[] = [
   { to: '/', icon: LayoutDashboard, labelKey: 'nav.dashboard', exact: true },
@@ -128,6 +129,7 @@ function Sidebar() {
             {t(labelKey)}
           </NavLink>
         ))}
+        <NavLink to="/muse" className="flex items-center gap-2.5 px-2.5 py-2 rounded text-xs" style={({ isActive }) => ({ color: isActive ? 'var(--text)' : 'var(--muted)', background: isActive ? 'var(--card)' : 'transparent' })}><Boxes size={13} />Muse AI</NavLink>
       </nav>
 
       <div className="mt-auto px-4 py-3.5 border-t flex flex-col gap-2.5" style={{ borderColor: 'var(--border)' }}>
@@ -197,6 +199,7 @@ function Layout() {
               <Route path="/guide" element={<GuidePage />} />
               <Route path="/models" element={<ModelCatalogPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/muse" element={<MusePage />} />
             </Routes>
           </Suspense>
         </main>

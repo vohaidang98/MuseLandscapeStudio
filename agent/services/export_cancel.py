@@ -2,6 +2,7 @@
 import asyncio
 import os
 import signal
+import subprocess
 import threading
 from contextlib import asynccontextmanager
 from contextvars import ContextVar
@@ -34,7 +35,14 @@ class CancellationToken:
     @staticmethod
     def _kill(pid):
         try:
-            os.killpg(pid, signal.SIGKILL)
+            if os.name == "nt":
+                result = subprocess.run(["taskkill", "/PID", str(pid), "/T", "/F"],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                               creationflags=subprocess.CREATE_NO_WINDOW, timeout=5)
+                if result.returncode:
+                    os.kill(pid, signal.SIGTERM)
+            else:
+                os.killpg(pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
 

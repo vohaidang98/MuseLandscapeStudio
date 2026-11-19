@@ -6,7 +6,7 @@ import os
 from contextlib import asynccontextmanager
 
 import websockets
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
 from agent.config import API_HOST, API_PORT, WS_HOST, WS_PORT
@@ -119,6 +119,8 @@ async def lifespan(app: FastAPI):
     controller.request_shutdown()
     from agent.services.codex_auth import codex_auth
     await codex_auth.shutdown()
+    from agent.services.muse_gateway import shutdown as stop_muse
+    await stop_muse()
     from agent.services.media_jobs import shutdown as stop_media_jobs
     await stop_media_jobs()
     await controller.drain()
@@ -134,7 +136,9 @@ async def lifespan(app: FastAPI):
     logger.info("FrameWeaver stopped")
 
 
-app = FastAPI(title="FrameWeaver", version="1.3.1", lifespan=lifespan)
+app = FastAPI(title="FrameWeaver", version="1.3.2", lifespan=lifespan)
+from agent.api.muse import router as muse_router
+app.include_router(muse_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -181,6 +185,9 @@ async def ext_callback(request: Request):
     Extension POSTs {id, status, data, error} here instead of sending via WS.
     Requires X-Callback-Secret header matching the secret sent to extension on WS connect.
     """
+    if request.headers.get("X-Callback-Secret") != _CALLBACK_SECRET:
+        logger.warning("ext/callback: rejected request with missing or invalid callback secret")
+        raise HTTPException(status_code=403, detail="invalid callback secret")
     data = await request.json()
     client = get_flow_client()
     req_id = data.get("id")

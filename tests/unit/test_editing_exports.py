@@ -143,7 +143,13 @@ async def test_unknown_foreign_invalid_ids_and_symlinks_never_remove_other_files
     assert (await remove(client, vid, [eid, foreign])).status_code == 404
     for ids in [[], ['not-a-uuid'], [str(uuid.uuid4())] * 101]:
         assert (await remove(client, vid, ids)).status_code == 422
-    path.unlink(); path.symlink_to(source)
+    path.unlink()
+    try:
+        path.symlink_to(source)
+    except OSError as exc:
+        if getattr(exc, "winerror", None) == 1314:
+            pytest.skip("Windows symlink privilege is unavailable")
+        raise
     assert (await remove(client, vid, [eid])).status_code == 409
     assert source.read_bytes() == b'original source' and foreign_path.is_file()
     path.unlink()  # Missing files may still be removed from history.

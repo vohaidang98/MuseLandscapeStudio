@@ -310,7 +310,12 @@ async def test_uploaded_music_and_effects_remain_in_library_without_selecting_mu
     # Selected music in the legacy mixer is unrelated to imported library items.
     assert 'saved.wav' in audio_project[4].read_text()
     outside = tmp_path / 'private.wav'; outside.write_bytes(wav.read_bytes())
-    (library / 'escape.wav').symlink_to(outside)
+    try:
+        (library / 'escape.wav').symlink_to(outside)
+    except OSError as exc:
+        if getattr(exc, 'winerror', None) == 1314:
+            pytest.skip('Windows symlink privilege is unavailable; upload checks passed')
+        raise
     assert not any(a['ref'] == 'music:escape.wav' for a in (await client.get(url)).json()['assets'])
 
 

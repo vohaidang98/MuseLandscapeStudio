@@ -56,6 +56,14 @@ dist-ssr/
 /VieNeu-TTS-main/
 /kokoro-main/
 
+# Windows desktop build artifacts and vendored binaries too large for the repo
+/windows/bin/
+/windows/npm-cache/
+/windows/pyinstaller-cache/
+/build/
+/release/
+.venv-build/
+
 # Personal hosting configuration and deployment cache
 .firebase/
 .firebaserc

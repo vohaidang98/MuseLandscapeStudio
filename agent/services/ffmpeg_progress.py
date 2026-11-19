@@ -1,6 +1,7 @@
 """Run FFmpeg with timestamp progress and bounded execution time."""
 
 import math
+import os
 import subprocess
 import tempfile
 import threading
@@ -20,14 +21,14 @@ def run_ffmpeg(command: list[str], duration: float, timeout: float,
     token = current_token.get()
     check_cancelled()
     if progress_callback is None and token is None:
-        return subprocess.run(command, capture_output=True, text=True, timeout=timeout)
+        return subprocess.run(command, capture_output=True, text=True, timeout=timeout, creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
 
     progress_callback = progress_callback or (lambda value: None)
 
     command = [command[0], "-nostats", "-progress", "pipe:1", *command[1:]]
     timed_out = threading.Event()
     with tempfile.TemporaryFile() as errors:
-        with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=errors, text=True, start_new_session=True) as process:
+        with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=errors, text=True, start_new_session=True, creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0) as process:
             if token:
                 token.register(process.pid)
             def expire():

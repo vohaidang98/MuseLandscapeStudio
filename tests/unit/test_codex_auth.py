@@ -180,12 +180,15 @@ async def test_rpc_notification_before_response_and_process_cleanup(monkeypatch)
     spawn = AsyncMock(return_value=proc)
     kill = MagicMock()
     monkeypatch.setattr(service.asyncio, "create_subprocess_exec", spawn)
-    monkeypatch.setattr(service.os, "killpg", kill)
+    monkeypatch.setattr(service.os, "killpg", kill, raising=False)
     async with service.CodexSession("/exact/codex") as client:
         await client.request("account/login/start", {"type": "chatgpt"})
         await asyncio.wait_for(client.wait_login("id"), 0.1)
     assert spawn.call_args.args[:2] == ("/exact/codex", "app-server")
-    kill.assert_called_once_with(proc.pid, signal.SIGTERM)
+    if service.os.name == "nt":
+        proc.terminate.assert_called_once()
+    else:
+        kill.assert_called_once_with(proc.pid, signal.SIGTERM)
     proc.stdin.close.assert_called_once()
 
 
